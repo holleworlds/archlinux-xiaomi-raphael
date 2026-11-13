@@ -355,6 +355,7 @@ GitHub Release 单个文件上限 2 GB，而 rootfs 有 6 GB 左右，脚本会�
 | `options: --privileged` | 脚本在 user namespace 里 `unshare -m -p` + bind mount 出 chroot，Docker 默认 seccomp 会拦掉 |
 | `-v /mnt:/mnt` + 把 `dl/ work/ out/` 软链过去 | runner 的 `/` 只有 ~14 GB，而 rootfs 镜像本身 8 GB；大磁盘挂在宿主 `/mnt`（≈74 GB），容器默认看不到 |
 | 先装 `archlinux-keyring` 再 `pacman -Syu` | 官方 Arch 镜像可能过期，直接 `-Syu` 会因 keyring 太旧失败 |
+| `rsync` 和 `dosfstools` | 提供宿主依赖检查所需的 `rsync` 与 `mkfs.vfat`，避免构建在启动时退出 |
 | `qemu-user` 装了兜底 | 个别镜像里包名不同（`qemu-emulators-full`）；脚本用 `qemu-aarch64` 跑 chroot 内的 aarch64 命令 |
 
 > `99-make-release.sh` 会把 `rootfs.sparse.img` 用 zstd 压到 19 级并切成 <1.9 GB 的分卷
