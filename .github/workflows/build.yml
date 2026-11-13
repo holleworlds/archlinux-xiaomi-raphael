@@ -121,7 +121,7 @@ jobs:
       SEC_ROOT_PASSWORD: ${{ secrets.IMAGE_ROOT_PASSWORD }}
       # 设备蓝牙地址 (唯一标识, 不放仓库) —— 在 Secrets 里设 IMAGE_BT_MAC,
       # 格式 "aa bb cc dd ee ff"; 没设的话镜像蓝牙不可用 (构建日志会提示)
-      RAPHAEL_BT_MAC: ${{ secrets.IMAGE_BT_MAC }}"
+      RAPHAEL_BT_MAC: ${{ secrets.IMAGE_BT_MAC }}
 
     steps:
       # ---------------------------------------------------------------- 环境

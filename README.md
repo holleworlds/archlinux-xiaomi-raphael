@@ -596,6 +596,9 @@ $ bluetoothctl --timeout 15 scan on     # 实测扫到 9 个真实设备
   | 云端构建 | GitHub 仓库 Secret `IMAGE_BT_MAC`（同上写法） |
   | 直接刷公开镜像 | `./scripts/bt-mac.sh set boot-cache.img "11 22 33 44 55 66"`，或 `./scripts/11-flash.sh --flash --bt-mac "..."` |
 
+  未设置 `IMAGE_BT_MAC` 或地址格式错误时，构建会给出警告并继续，不会注入设备专属地址；
+  蓝牙仍需正确的设备地址和原厂 NVM，不能因此认为已可用。
+
 - **怎么查自己设备的地址**：最稳的是刷机前先在 Android 里看
   （设置 → 关于手机 → 状态信息 → 蓝牙地址），按上表反着写进配置。
   如果设备已经被刷成 Linux 且当时没记地址，可以试着从这几个地方找（本机实测的情况）：

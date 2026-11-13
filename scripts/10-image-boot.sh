@@ -73,7 +73,7 @@ if [ -n "$BOOT_DTB_SRC" ]; then
   # 兜底再补一次: 即使来源那份没被 03 阶段补过, 启动的这份也一定有采集路由
   patch_sound_routing "$STAGE/dtbs/qcom/raphael-redmi-k20pro.dtb"
   # 蓝牙地址属于设备唯一标识, 不写进公开仓库 —— 构建时注入:
-  #   优先 config/local.conf (已 gitignore), 其次环境变量 RAPHAEL_BT_MAC
+  #   优先环境变量 RAPHAEL_BT_MAC, 其次 config/local.conf (已 gitignore)
   BT_MAC="${RAPHAEL_BT_MAC:-}"
   if [ -z "$BT_MAC" ] && [ -f "$PROJ/config/local.conf" ]; then
     BT_MAC="$(sed -n 's/^BT_MAC="\(.*\)".*/\1/p' "$PROJ/config/local.conf" | head -1)"
@@ -90,9 +90,10 @@ if [ -n "$BOOT_DTB_SRC" ]; then
     else
       warn "蓝牙地址注入失败 (设备树里没有 bluetooth 节点?)"
     fi
+  elif [ -n "$BT_MAC_NORM" ]; then
+    warn "未找到 fdtput，无法注入蓝牙地址 -> 该镜像蓝牙不可用"
   elif [ -n "$BT_MAC" ]; then
-    # 只报长度不报内容 (Secret 可能是敏感值, 也已经被 CI 打码)
-    warn "蓝牙地址格式不对: 去掉分隔符后是 ${#BT_MAC_HEX} 位十六进制, 需要正好 12 位 (如 11:22:33:44:55:66 或 112233445566)$([ ${#BT_MAC_HEX} -gt 12 ] && echo ' —— 值里混进了多余字符' || echo ' —— 位数不够, 可能没填全') -> 该镜像蓝牙不可用"
+    warn "蓝牙地址格式不对: 需要正好 12 位十六进制 (如 11:22:33:44:55:66 或 112233445566) -> 该镜像蓝牙不可用"
   else
     warn "未提供蓝牙地址 -> 该镜像蓝牙不可用 (在 config/local.conf 里设 BT_MAC, 或用 RAPHAEL_BT_MAC)"
   fi
